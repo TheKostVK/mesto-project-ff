@@ -1,4 +1,3 @@
-
 function openModal(modal) {
     modal.classList.add("popup_opened");
     addModalListeners(modal);
