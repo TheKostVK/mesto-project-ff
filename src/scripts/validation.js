@@ -4,49 +4,21 @@
 function messageType(input) {
     const v = input.validity;
 
-    // Упорядоченный по степени влияния список используемых ключей ошибок
-    const order = [
-        'valueMissing',
-        'typeMismatch',
-        'tooShort',
-        'tooLong',
-        'patternMismatch',
-    ];
+    if (v.patternMismatch) {
+        // Текст из data-error-pattern
+        const customMessage = input.getAttribute('data-error-pattern');
+        const defaultMessage = 'Значение не соответствует формату.';
 
-    const defaults = {
-        valueMissing: 'Вы пропустили это поле.',
-        typeMismatch: 'Неверный формат.',
-        tooShort: `Минимальное количество символов: ${ input.minLength }. Длина текста сейчас: ${ input.value.length } символ.`,
-        tooLong: `Максимальное количество символов: ${ input.maxLength }. Длина текста сейчас: ${ input.value.length } символ.`,
-        patternMismatch: 'Значение не соответствует формату.',
-    };
-
-    // Поиск текста ошибок в data-* атрибутах
-    const readData = (attr) => input.getAttribute(`data-${ attr }`);
-
-    const dataAttrByKey = {
-        valueMissing: [ 'error-required' ],
-        typeMismatch: [ 'error-type' ],
-        tooShort: [ 'error-too-short' ],
-        tooLong: [ 'error-too-long' ],
-        patternMismatch: [ 'error-pattern' ],
-    };
-
-    for (const key of order) {
-        if (v[key]) {
-            const candidates = dataAttrByKey[key] || [];
-
-            for (const name of candidates) {
-                const val = readData(name);
-
-                if (val) return { key, message: val };
-            }
-
-            return { key, message: defaults[key] || input.validationMessage || 'Неверное значение.' };
-        }
+        return {
+            key: 'patternMismatch',
+            message: customMessage || input.validationMessage || defaultMessage,
+        };
     }
 
-    return { key: 'valid', message: input.validationMessage || '' };
+    return {
+        key: 'valid',
+        message: input.validationMessage || '',
+    };
 }
 
 /**
