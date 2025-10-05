@@ -3,6 +3,7 @@
 @import url('./__close/popup__close.css');
 @import url('./__title/popup__title.css');
 @import url('./__form/popup__form.css');
+@import url('./__form/_field-error/popup__form__field-error.css');
 @import url('./__input/popup__input.css');
 @import url('./__button/popup__button.css');
 @import url('./__caption/popup__caption.css');
@@ -23,11 +24,10 @@
 
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0.1s, opacity 0.2s linear;
+    transition: visibility 0.1s, opacity 0.1s linear;
 }
 
 .popup.popup_opened {
     visibility: visible;
     opacity: 1;
-    transition: visibility 0.1s, opacity 0.2s linear;
 }

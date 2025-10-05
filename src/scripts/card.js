@@ -3,7 +3,9 @@ const cardTemplate = document.querySelector("#card-template").content.querySelec
 
 const placesWrap = document.querySelector(".places__list");
 
-// Функция создания элемента карточки
+/**
+ * Функция создания элемента карточки
+ */
 function createCardElement(data, onDelete, onLike, onViewImage) {
     const cardElement = cardTemplate.cloneNode(true);
     const deleteButton = cardElement.querySelector(".card__delete-button");
@@ -17,22 +19,32 @@ function createCardElement(data, onDelete, onLike, onViewImage) {
 
     deleteButton.addEventListener("click", onDelete);
     likeButton.addEventListener("click", onLike);
-    cardImage.addEventListener("click", onViewImage);
+
+    // Проверка атрибута, что он является функцией
+    if (typeof onViewImage === "function") {
+        cardImage.addEventListener("click", () => onViewImage({ name: data.name, link: data.link }));
+    }
 
     return cardElement;
 }
 
-// Удаление карточки
+/**
+ * Удаление карточки
+ */
 function handleDeleteCard(evt) {
     evt.target.closest(".card").remove();
 }
 
-// Добавление/удаление лайка
+/**
+ * Добавление/удаление лайка
+ */
 function handleActiveLike(evt) {
     evt.target.classList.toggle("card__like-button--active");
 }
 
-// Добавление карточки
+/**
+ * Добавление карточки
+ */
 function createCard(data, handleViewImage) {
     placesWrap.prepend(createCardElement(data, handleDeleteCard, handleActiveLike, handleViewImage));
 }
