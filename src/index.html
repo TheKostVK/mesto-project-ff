@@ -39,12 +39,12 @@
             <form class="popup__form" name="edit-profile" novalidate>
                 <input id="profile-name" type="text" name="name" class="popup__input popup__input_type_name"
                        placeholder="Имя" required
-                       minlength="2" maxlength="40" pattern="^[a-zA-Zа-яА-Я]+$"
+                       minlength="2" maxlength="40" pattern="[a-zA-Zа-яА-ЯёЁ\s-]*"
                        data-error-pattern="Разрешены только кириллические и латинские буквы, знаки дефиса и пробелы.">
                 <span class="popup__form-field-error profile-name-input-error"></span>
                 <input id="profile-description" type="text" name="description"
                        class="popup__input popup__input_type_description"
-                       placeholder="Занятие" required minlength="2" maxlength="200" pattern="^[a-zA-Z]+$"
+                       placeholder="Занятие" required minlength="2" maxlength="200" pattern="[a-zA-Zа-яА-ЯёЁ\s-]*"
                        data-error-pattern="Разрешены только кириллические и латинские буквы, знаки дефиса и пробелы.">
                 <span class="popup__form-field-error profile-description-input-error"></span>
                 <button type="submit" class="button popup__button" disabled>Сохранить</button>
@@ -57,7 +57,7 @@
             <h3 class="popup__title">Новое место</h3>
             <form class="popup__form" name="new-place" novalidate>
                 <input id="card-name" type="text" name="place-name" class="popup__input popup__input_type_card-name"
-                       placeholder="Название" required minlength="2" maxlength="30" pattern="^[a-zA-Z]+$"
+                       placeholder="Название" required minlength="2" maxlength="30" pattern="[a-zA-Zа-яА-ЯёЁ\s-]*"
                        data-error-pattern="Разрешены только кириллические и латинские буквы, знаки дефиса и пробелы.">
                 <span class="popup__form-field-error card-name-input-error"></span>
                 <input id="card-link" type="url" name="link" class="popup__input popup__input_type_url"
