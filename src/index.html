@@ -37,7 +37,9 @@
             <button type="button" class="popup__close"></button>
             <h3 class="popup__title">Редактировать профиль</h3>
             <form class="popup__form" name="edit-profile" novalidate>
-                <!-- Используется юникод, так как в WebKit/Safari после 2024 года бывают сбои с использованием кириллических символов внутри регулярных выражений и диапазонов-->
+                <!-- Используется юникод, так как в WebKit/Safari после 2024 года бывают сбои
+                с использованием кириллических символов внутри регулярных выражений и диапазонов.
+                Человеко читаемый вид регулярного выражения: [A-Za-zА-Яа-яЁё \-]+ -->
                 <input id="profile-name" type="text" name="name" class="popup__input popup__input_type_name"
                        placeholder="Имя" required
                        minlength="2" maxlength="40"
