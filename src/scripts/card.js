@@ -6,7 +6,7 @@ const placesWrap = document.querySelector(".places__list");
 /**
  * Функция создания элемента карточки
  */
-function createCardElement(data, onDelete, onLike, onViewImage) {
+function createCardElement({ data, onDelete, onLike, onViewImage }) {
     const { _id, name, link, owner, likes, createdAt } = data;
     const storedUser = JSON.parse(sessionStorage.getItem('userData'));
 
@@ -21,7 +21,7 @@ function createCardElement(data, onDelete, onLike, onViewImage) {
     const cardImage = cardElement.querySelector(".card__image");
 
     cardImage.src = link;
-    cardImage.alt = data;
+    cardImage.alt = `Фотография места: ${ name }`;
 
     cardElement.querySelector(".card__title").textContent = name;
 
@@ -71,8 +71,13 @@ function handleLikeCard(evt, response) {
 /**
  * Добавление карточки
  */
-function createCard(data, handleDeleteCard, handleLikeCard, handleViewImage) {
-    placesWrap.prepend(createCardElement(data, handleDeleteCard, handleLikeCard, handleViewImage));
+function createCard({ data, handleDeleteCard, handleLikeCard, handleViewImage }) {
+    placesWrap.prepend(createCardElement({
+        data,
+        onDelete: handleDeleteCard,
+        onLike: handleLikeCard,
+        onViewImage: handleViewImage
+    }));
 }
 
 export { createCard, handleLikeCard, handleDeleteCard };

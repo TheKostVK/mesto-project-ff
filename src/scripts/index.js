@@ -44,7 +44,26 @@ const modalDeletePlaceBtn = modalDeletePlace.querySelector('.popup__button');
 // Функция-обработчик ошибки получения данных
 const handleResponseError = (error) => {
     console.error(error);
-}
+};
+
+/**
+ * Переключает кнопку между состояниями загрузки и обычным
+ * @param {HTMLButtonElement} button - сама кнопка
+ * @param {boolean} isLoading - true если идёт загрузка
+ * @param {string} [loadingText='Сохранение...'] - текст во время загрузки
+ */
+const toggleButtonLoading = (button, isLoading, loadingText = 'Сохранение...') => {
+    if (!button) return;
+
+    if (isLoading) {
+        button.dataset.originalText = button.textContent;
+        button.textContent = loadingText;
+        button.disabled = true;
+    } else {
+        button.textContent = button.dataset.originalText || 'Сохранить';
+        button.disabled = false;
+    }
+};
 //#endregion
 
 //#region Обработка событий на карточке места
@@ -55,9 +74,10 @@ const handleClickViewImgCard = (evt) => {
 
     description.textContent = name;
     img.src = link;
+    img.alt = `Фотография места: ${ name }`;
 
     openModal(modalViewImg);
-}
+};
 
 // Функция-обработчик клика лайка карточки
 const handleClickLikeCard = (evt) => {
@@ -71,7 +91,7 @@ const handleClickLikeCard = (evt) => {
     }
 
     apiRequest(`cards/likes/${ _id }`, method).then((response) => handleLikeCard(evt, response)).catch(handleResponseError);
-}
+};
 
 // Функция-обработчик удаления карточки
 const handleModalDeleteCard = (evt) => {
@@ -85,10 +105,10 @@ const handleModalDeleteCard = (evt) => {
     }
 
     const submitBtn = modalDeletePlace.querySelector('.popup__button');
-    submitBtn.textContent = 'Удаление...';
+    toggleButtonLoading(submitBtn, true, 'Удаление...');
 
     apiRequest(`/cards/${ _id }`, 'DELETE').then(() => handleDeleteCard(evt)).catch(handleResponseError).finally(() => {
-        submitBtn.textContent = 'Да';
+        toggleButtonLoading(submitBtn, false, 'Да');
         closeModal(modalDeletePlace);
     });
 };
@@ -121,12 +141,12 @@ const handleEditProfileFormSubmit = (evt) => {
     const name = modalEditProfileForm.elements['name'].value;
     const description = modalEditProfileForm.elements['description'].value;
     const submitBtn = modalEditProfile.querySelector('.popup__button');
-    submitBtn.textContent = 'Сохранение...';
+    toggleButtonLoading(submitBtn, true, 'Сохранение...');
 
     apiRequest('users/me ', 'PATCH', {
         name, about: description
     }).then(handleUpdateProfileResponse).catch(handleResponseError).finally(() => {
-        submitBtn.textContent = 'Сохранить';
+        toggleButtonLoading(submitBtn, false, 'Сохранить');
         closeModal(modalEditProfile);
     });
 }
@@ -140,7 +160,12 @@ changeProfileBtn.addEventListener("click", () => {
 
 // Функция-обработчик ответа на запрос добавления новой карточки
 const handleAddNewPlaceResponse = (response) => {
-    createCard(response, handleClickDeleteCard, handleClickLikeCard, handleClickViewImgCard);
+    createCard({
+        data: response,
+        handleDeleteCard: handleClickDeleteCard,
+        handleLikeCard: handleClickLikeCard,
+        handleViewImage: handleClickViewImgCard
+    });
 };
 
 /**
@@ -150,19 +175,20 @@ const handleAddNewPlaceFormSubmit = (evt) => {
     evt.preventDefault();
 
     const submitBtn = modalNewPlace.querySelector('.popup__button');
-    submitBtn.textContent = 'Сохранение...';
+    toggleButtonLoading(submitBtn, true, 'Сохранение...');
 
     apiRequest('cards', 'POST', {
         name: placeNameField.value, link: placeLinkField.value
     }).then(handleAddNewPlaceResponse).catch(handleResponseError).finally(() => {
-        submitBtn.textContent = 'Сохранить';
+        toggleButtonLoading(submitBtn, false, 'Сохранить');
         closeModal(modalNewPlace, () => clearValidation(modalNewPlaceForm, validationSettings));
         modalNewPlaceForm.reset();
     });
-}
+};
 
 addPlaceBtn.addEventListener("click", () => {
     openModal(modalNewPlace);
+    modalNewPlaceForm.reset();
 });
 
 // Функция-обработчик ответа на запрос изменения аватара пользователя
@@ -170,7 +196,7 @@ const handleEditProfileImgResponse = (response) => {
     const { name, avatar } = response;
 
     profileImg.src = avatar;
-    profileImg.alt = name;
+    profileImg.alt = `Фотография профиля: ${ name }`;
 };
 
 /**
@@ -180,19 +206,20 @@ const handleEditProfileImgFormSubmit = (evt) => {
     evt.preventDefault();
 
     const submitBtn = modalEditProfileImg.querySelector('.popup__button');
-    submitBtn.textContent = 'Сохранение...';
+    toggleButtonLoading(submitBtn, true, 'Сохранение...');
 
     apiRequest('users/me/avatar', 'PATCH', {
         avatar: profileLinkField.value
     }).then(handleEditProfileImgResponse).catch(handleResponseError).finally(() => {
-        submitBtn.textContent = 'Сохранить';
+        toggleButtonLoading(submitBtn, false, 'Сохранить');
         closeModal(modalEditProfileImg, () => clearValidation(modalEditProfileImgForm, validationSettings));
         modalEditProfileImgForm.reset();
     });
-}
+};
 
 changeProfileImgBtn.addEventListener("click", () => {
     openModal(modalEditProfileImg);
+    modalEditProfileImgForm.reset();
 });
 
 modalNewPlace.addEventListener('submit', handleAddNewPlaceFormSubmit);
@@ -210,7 +237,7 @@ const handleUserResponse = (response) => {
     profileTitle.textContent = name;
     profileDescription.textContent = about;
     profileImg.src = avatar;
-    profileImg.alt = name;
+    profileImg.alt = `Фотография профиля: ${ name }`;
 
     sessionStorage.setItem('userData', JSON.stringify({ _id, name, cohort }));
 };
@@ -220,7 +247,12 @@ const handleCardsResponse = (response) => {
     response
         .sort((cardA, cardB) => new Date(cardA.createdAt) - new Date(cardB.createdAt))
         .forEach((card) => {
-            createCard(card, handleClickDeleteCard, handleClickLikeCard, handleClickViewImgCard);
+            createCard({
+                data: card,
+                handleDeleteCard: handleClickDeleteCard,
+                handleLikeCard: handleClickLikeCard,
+                handleViewImage: handleClickViewImgCard
+            });
         });
 };
 
