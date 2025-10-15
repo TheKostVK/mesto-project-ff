@@ -4,6 +4,8 @@
 function messageType(input) {
     const v = input.validity;
 
+    console.log(v);
+
     if (v.patternMismatch) {
         // Текст из data-error-pattern
         const customMessage = input.getAttribute('data-error-pattern');
