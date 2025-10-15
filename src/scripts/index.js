@@ -5,6 +5,7 @@ import { openModal, closeModal } from "./modal";
 import { createCard, handleLikeCard, handleDeleteCard } from "./card";
 import { apiRequest } from "./api";
 
+//#region Инициализация DOM элементов и вспомогательных функций
 // Все формы на странице
 const formList = document.forms;
 
@@ -40,11 +41,13 @@ const profileLinkField = modalEditProfileImgForm.elements['link'];
 const modalDeletePlace = document.querySelector(".popup_type_delete_place");
 const modalDeletePlaceBtn = modalDeletePlace.querySelector('.popup__button');
 
-// Функция-обработчик ошибки получения данных с API
+// Функция-обработчик ошибки получения данных
 const handleResponseError = (error) => {
     console.error(error);
 }
+//#endregion
 
+//#region Обработка событий на карточке места
 // Функция-обработчик клика просмотра картинки
 const handleClickViewImgCard = (evt) => {
     const cardElement = evt.target.closest('.card');
@@ -96,7 +99,9 @@ const handleClickDeleteCard = (evt) => {
 
     modalDeletePlaceBtn.addEventListener('click', () => handleModalDeleteCard(evt), { once: true });
 };
+//#endregion
 
+//#region Обработка событий в модальных окнах
 // Функция-обработчик ответа на запрос обновления профиля
 const handleUpdateProfileResponse = (response) => {
     const { _id, name, cohort, about } = response;
@@ -195,7 +200,9 @@ modalEditProfile.addEventListener('submit', handleEditProfileFormSubmit);
 modalEditProfileImg.addEventListener('submit', handleEditProfileImgFormSubmit);
 
 enableValidation(validationSettings);
+//#endregion
 
+//#region Запросы данных для первичного отображения
 // Функция-обработчик ответа на запрос получения данных о пользователе
 const handleUserResponse = (response) => {
     const { _id, name, cohort, avatar, about } = response;
@@ -236,3 +243,4 @@ executeSequentially([
     () => apiRequest('users/me').then(handleUserResponse).catch(handleResponseError),
     () => apiRequest('cards').then(handleCardsResponse).catch(handleResponseError)
 ]);
+//#endregion
