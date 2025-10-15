@@ -4,8 +4,6 @@
 function messageType(input) {
     const v = input.validity;
 
-    console.log(v);
-
     if (v.patternMismatch) {
         // Текст из data-error-pattern
         const customMessage = input.getAttribute('data-error-pattern');
@@ -147,7 +145,6 @@ function enableValidation({
     const forms = Array.from(document.querySelectorAll(settings.formSelector));
 
     forms.forEach((form) => {
-        // Стартовое состояние кнопки
         toggleSubmit(form, false, settings);
 
         // Навешиваем слушатели на все инпуты
