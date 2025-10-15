@@ -98,7 +98,7 @@ function updateFieldState(form, input, settings) {
 }
 
 /**
- * Сбрасывает все ошибки валидации в форме и блокирует кнопку сабмита.
+ * Сбрасывает все ошибки валидации в форме, сбрасывает поля формы и блокирует кнопку сабмита.
  */
 function clearValidation(form, {
     formSelector,
@@ -121,6 +121,8 @@ function clearValidation(form, {
 
     inputs.forEach((input) => hideInputError(form, input, settings));
     toggleSubmit(form, true, settings);
+
+    form.reset();
 }
 
 /**

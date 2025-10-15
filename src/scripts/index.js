@@ -181,14 +181,12 @@ const handleAddNewPlaceFormSubmit = (evt) => {
         name: placeNameField.value, link: placeLinkField.value
     }).then(handleAddNewPlaceResponse).catch(handleResponseError).finally(() => {
         toggleButtonLoading(submitBtn, false, 'Сохранить');
-        closeModal(modalNewPlace, () => clearValidation(modalNewPlaceForm, validationSettings));
-        modalNewPlaceForm.reset();
+        closeModal(modalNewPlace);
     });
 };
 
 addPlaceBtn.addEventListener("click", () => {
-    openModal(modalNewPlace);
-    modalNewPlaceForm.reset();
+    openModal(modalNewPlace, () => clearValidation(modalNewPlaceForm, validationSettings));
 });
 
 // Функция-обработчик ответа на запрос изменения аватара пользователя
@@ -212,14 +210,12 @@ const handleEditProfileImgFormSubmit = (evt) => {
         avatar: profileLinkField.value
     }).then(handleEditProfileImgResponse).catch(handleResponseError).finally(() => {
         toggleButtonLoading(submitBtn, false, 'Сохранить');
-        closeModal(modalEditProfileImg, () => clearValidation(modalEditProfileImgForm, validationSettings));
-        modalEditProfileImgForm.reset();
+        closeModal(modalEditProfileImg);
     });
 };
 
 changeProfileImgBtn.addEventListener("click", () => {
-    openModal(modalEditProfileImg);
-    modalEditProfileImgForm.reset();
+    openModal(modalEditProfileImg, () => clearValidation(modalEditProfileImgForm, validationSettings));
 });
 
 modalNewPlace.addEventListener('submit', handleAddNewPlaceFormSubmit);
