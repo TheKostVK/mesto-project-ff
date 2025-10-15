@@ -229,4 +229,7 @@ const executeSequentially = (promiseFactories) => {
 };
 
 // Инициализация данных
-executeSequentially([ () => apiRequest('users/me').then(handleUserResponse).catch(handleResponseError), () => apiRequest('cards').then(handleCardsResponse).catch(handleResponseError) ]);
+executeSequentially([
+    () => apiRequest('users/me').then(handleUserResponse).catch(handleResponseError),
+    () => apiRequest('cards').then(handleCardsResponse).catch(handleResponseError)
+]);
